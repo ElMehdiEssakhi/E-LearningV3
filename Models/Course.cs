@@ -23,7 +23,7 @@ namespace E_LearningV3.Models
         // Navigation Properties
         public ICollection<Chapter> Chapters { get; set; } = new List<Chapter>();
         public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
-        public ICollection<ExamFinale> ExamFinales { get; set; } = new List<ExamFinale>();
+        public ICollection<ExamFinal> ExamFinales { get; set; } = new List<ExamFinal>();
         public ICollection<Certificate> Certificates { get; set; } = new List<Certificate>();
     }
 }
