@@ -30,13 +30,15 @@ namespace E_LearningV3.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<User> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public RegisterModel(
             UserManager<User> userManager,
             IUserStore<User> userStore,
             SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +46,7 @@ namespace E_LearningV3.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -52,6 +55,9 @@ namespace E_LearningV3.Areas.Identity.Pages.Account
         /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string Role { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -71,6 +77,13 @@ namespace E_LearningV3.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
+            [Required]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -115,6 +128,12 @@ namespace E_LearningV3.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
+                // ⭐️ DEBUG LINE ⭐️
+                _logger.LogInformation($"Attempting to register user as role: {Role ?? "NULL"}");
+
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
+
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -122,6 +141,32 @@ namespace E_LearningV3.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    string finalRole = null;
+
+                    if (!string.IsNullOrEmpty(Role) && await _roleManager.RoleExistsAsync(Role))
+                    {
+                        
+                        // Assign the specific role (e.g., "Prof" or "Student")
+                        await _userManager.AddToRoleAsync(user, Role);
+                        _logger.LogInformation($"User {user.Email} successfully registered as {Role}.");
+                        finalRole = Role;
+                    }
+                    else
+                    {
+                        // FALLBACK: If the role is invalid or not provided (shouldn't happen here), assign a default role or log an error
+                        // Example: Assign "Student" as the default if 'Prof' is not found.
+                        const string DefaultRole = "Student";
+                        if (await _roleManager.RoleExistsAsync(DefaultRole))
+                        {
+                            await _userManager.AddToRoleAsync(user, DefaultRole);
+                            _logger.LogWarning($"User {user.Email} registered with default role: {DefaultRole} (requested role '{Role}' was invalid or missing).");
+                        }
+                        else
+                        {
+                            _logger.LogError($"Role '{DefaultRole}' does not exist and cannot be assigned to user {user.Email}.");
+                        }
+                    }
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -142,7 +187,21 @@ namespace E_LearningV3.Areas.Identity.Pages.Account
                     else
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        if (finalRole == "Prof")
+                        {
+                            // Redirect Professor
+                            return LocalRedirect("/Prof/Welcome");
+                        }
+                        else if (finalRole == "Student")
+                        {
+                            // Redirect Student
+                            return LocalRedirect("/Student/Welcome");
+                        }
+                        else
+                        {
+                            // Fallback for an unexpected scenario where the user was created but no role was assigned/tracked
+                            return LocalRedirect(returnUrl);
+                        }
                     }
                 }
                 foreach (var error in result.Errors)

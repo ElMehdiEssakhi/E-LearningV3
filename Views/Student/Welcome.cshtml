@@ -1,0 +1,26 @@
+﻿@{
+    // Sets the title for the browser tab
+    ViewData["Title"] = "Student Welcome";
+    string displayName = (string)ViewData["DisplayName"];
+}
+
+<div class="container my-5">
+    <div class="jumbotron bg-info bg-opacity-10 p-5 rounded-3 shadow-sm">
+        <h1 class="display-4 text-secondary">Welcome, @displayName!</h1>
+        <p class="lead">Your personalized academic portal is ready. Check your schedule and grades.</p>
+        <hr class="my-4">
+        <p>Click below to access your enrolled courses and personal academic history.</p>
+        <a class="btn btn-secondary btn-lg" href="#" role="button">View My Courses</a>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h3>My Next Class</h3>
+            <p>Database Systems (DB201) - Today at 10:00 AM</p>
+        </div>
+        <div class="col-md-6">
+            <h3>Grade Summary</h3>
+            <p class="text-success fw-bold">Current GPA: 3.5</p>
+        </div>
+    </div>
+</div>

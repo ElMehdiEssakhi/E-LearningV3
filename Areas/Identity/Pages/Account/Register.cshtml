@@ -11,6 +11,18 @@
 
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+            <!--firstname-->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.FirstName" class="form-control" placeholder="First Name" aria-required="true" />
+                <label asp-for="Input.FirstName"></label>
+                <span asp-validation-for="Input.FirstName" class="text-danger small"></span>
+            </div>
+            <!--lastname-->
+            <div class="form-floating mb-3">
+                <input asp-for="Input.LastName" class="form-control" placeholder="Last Name" aria-required="true" />
+                <label asp-for="Input.LastName"></label>
+                <span asp-validation-for="Input.LastName" class="text-danger small"></span>
+            </div>
 
             <!-- Email -->
             <div class="form-floating mb-3">
@@ -19,6 +31,9 @@
                 <label asp-for="Input.Email"></label>
                 <span asp-validation-for="Input.Email" class="text-danger small"></span>
             </div>
+             
+            <!--role--> 
+            <input type="hidden" asp-for="Role" />
 
             <!-- Password -->
             <div class="form-floating mb-3">

@@ -20,13 +20,15 @@ namespace E_LearningV3.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
+        private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger, UserManager<User> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -115,8 +117,27 @@ namespace E_LearningV3.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    if (await _userManager.IsInRoleAsync(user, "Prof"))
+                    {
+                        // Redirect Professors to their dedicated dashboard/area
+                        _logger.LogInformation("User logged in as a Professor.");
+                        return LocalRedirect("/Prof/Welcome"); 
+                    }
+                    else if (await _userManager.IsInRoleAsync(user, "Student"))
+                    {
+                        // Redirect Students to their dedicated dashboard/area
+                        _logger.LogInformation("User logged in as a Student.");
+                        return LocalRedirect("/Student/Welcome"); 
+                    }
+                    else
+                    {
+                        // FALLBACK: If the user has no recognized role, or if they have multiple roles, 
+                        // you decide the priority or send them to a general landing page.
+                        _logger.LogWarning("User logged in but has no primary role set.");
+                        await _signInManager.SignOutAsync();
+                        return RedirectToPage();
+                    }
                 }
                 if (result.RequiresTwoFactor)
                 {

@@ -1,0 +1,22 @@
+﻿@page
+@model ChooseRoleModel
+@{
+    ViewData["Title"] = "Choose Role";
+}
+
+<div class="text-center">
+    <h2>@ViewData["Title"]</h2>
+    <p class="lead">Select your role to continue registration:</p>
+
+    <a asp-page="./Register"
+       asp-route-role="Prof"
+       class="btn btn-primary btn-lg mx-2">
+        Become a Prof
+    </a>
+
+    <a asp-page="./Register"
+       asp-route-role="Student"
+       class="btn btn-secondary btn-lg mx-2">
+        Become a Student
+    </a>
+</div>
