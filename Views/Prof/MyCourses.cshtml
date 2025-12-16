@@ -1,0 +1,67 @@
+﻿@model IEnumerable<E_LearningV3.Models.Course>
+
+@{
+    ViewData["Title"] = "My Courses";
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-primary">My Courses</h1>
+        <a asp-controller="Courses" asp-action="Create" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Create New Course
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning">
+            <strong>No courses found.</strong> Start by creating your first course.
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Course Name</th>
+                            <th>Description</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var course in Model)
+                        {
+                            <tr>
+                                <td>@course.CourseId</td>
+                                <td class="fw-semibold">@course.CourseName</td>
+                                <td class="text-muted">
+                                    @(course.Description.Length > 60
+                                        ? course.Description.Substring(0, 60) + "..."
+                                        : course.Description)
+                                </td>
+                                <td class="text-end">
+                                    <a asp-controller="Courses"
+                                       asp-action="Edit"
+                                       asp-route-id="@course.CourseId"
+                                       class="btn btn-sm btn-outline-primary me-1">
+                                        Edit
+                                    </a>
+
+                                    <a asp-controller="Courses"
+                                       asp-action="Delete"
+                                       asp-route-id="@course.CourseId"
+                                       class="btn btn-sm btn-outline-danger">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

@@ -2,6 +2,16 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
+using E_LearningV3.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,15 +20,6 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using E_LearningV3.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
 
 namespace E_LearningV3.Areas.Identity.Pages.Account
 {
@@ -31,6 +32,7 @@ namespace E_LearningV3.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly AppDbContext _context;
 
         public RegisterModel(
             UserManager<User> userManager,
@@ -38,6 +40,7 @@ namespace E_LearningV3.Areas.Identity.Pages.Account
             SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
+            AppDbContext context,
             RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
@@ -47,6 +50,7 @@ namespace E_LearningV3.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _context = context;
         }
 
         /// <summary>
@@ -189,11 +193,25 @@ namespace E_LearningV3.Areas.Identity.Pages.Account
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         if (finalRole == "Prof")
                         {
+                            var professor = new Professor
+                            {
+                                UserId = user.Id // The Identity ID links the user to the profile
+                            };
+                            _context.Professors.Add(professor);
+                            _logger.LogInformation($"Created Professor profile for user {user.Email}.");
+                            await _context.SaveChangesAsync();
                             // Redirect Professor
                             return LocalRedirect("/Prof/Welcome");
                         }
                         else if (finalRole == "Student")
                         {
+                            var student = new Student
+                            {
+                                UserId = user.Id
+                            };
+                            _context.Students.Add(student);
+                            _logger.LogInformation($"Created Student profile for user {user.Email}.");
+                            await _context.SaveChangesAsync();
                             // Redirect Student
                             return LocalRedirect("/Student/Welcome");
                         }

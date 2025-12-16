@@ -1,0 +1,75 @@
+﻿@model E_LearningV3.Models.Course
+
+@{
+    ViewData["Title"] = "Edit Course";
+}
+
+<h1>Edit Course</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Hidden field for CourseId -->
+            <input type="hidden" asp-for="CourseId" />
+
+            <div class="form-group mb-3">
+                <label asp-for="CourseName" class="control-label"></label>
+                <input asp-for="CourseName" class="form-control" />
+                <span asp-validation-for="CourseName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save Course" class="btn btn-primary" />
+                <a asp-action="MyCourses" class="btn btn-secondary ms-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<hr />
+
+<h3>Chapters</h3>
+
+<p>
+    <a asp-controller="Chapters" asp-action="Create" asp-route-courseId="@Model.CourseId" class="btn btn-success mb-3">
+        Add New Chapter
+    </a>
+</p>
+
+@if (Model.Chapters != null && Model.Chapters.Any())
+{
+    <div class="list-group">
+        @foreach (var chap in Model.Chapters)
+        {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <span>@chap.Title</span>
+                <span>
+                    <a asp-controller="Chapters" asp-action="Edit" asp-route-id="@chap.ChapId" class="btn btn-sm btn-warning me-1">Edit</a>
+                    <a asp-controller="Chapters" asp-action="Delete" asp-route-id="@chap.ChapId" class="btn btn-sm btn-danger">Delete</a>
+                </span>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        No chapters yet. Click "Add New Chapter" to start building your course.
+    </div>
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

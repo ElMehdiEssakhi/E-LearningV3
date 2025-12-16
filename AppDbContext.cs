@@ -32,6 +32,31 @@ namespace E_LearningV3
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
+
+            // 1. Student -> Certificate: Change to Restrict
+            builder.Entity<Certificate>()
+                .HasOne(c => c.Student)
+                .WithMany(s => s.Certificates)
+                .HasForeignKey(c => c.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+            // 2. Course -> Certificate: Change to Restrict
+            builder.Entity<Certificate>()
+                .HasOne(c => c.Course)
+                .WithMany(cr => cr.Certificates)
+                .HasForeignKey(c => c.CourseId)
+                .OnDelete(DeleteBehavior.Restrict);
+            // 3. Student -> Enrollment: Change to Restrict (Another frequent conflict source)
+            builder.Entity<Enrollment>()
+                .HasOne(e => e.Student)
+                .WithMany(s => s.Enrollments)
+                .HasForeignKey(e => e.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+            // 4. Student -> Score: Change to Restrict
+            builder.Entity<Score>()
+                .HasOne(s => s.Student)
+                .WithMany(st => st.Scores)
+                .HasForeignKey(s => s.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -1,5 +1,7 @@
 using E_LearningV3;
 using E_LearningV3.Models;
+using E_LearningV3.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -29,6 +31,14 @@ builder.Services.AddDefaultIdentity<User>(options =>
 })
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<AppDbContext>();
+
+builder.Services.AddScoped<IClaimsTransformation, ProfessorClaimsTransformation>();
+builder.Services.AddScoped<ChapterService>();
+builder.Services.AddScoped<ContentService>();
+builder.Services.AddScoped<QuizService>();
+
+
+
 
 
 var app = builder.Build();

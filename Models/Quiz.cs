@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_LearningV3.Models
@@ -22,9 +23,11 @@ namespace E_LearningV3.Models
         // Foreign Key to Chapter
         public int ChapId { get; set; }
         [ForeignKey("ChapId")]
+        [ValidateNever]
         public Chapter Chapter { get; set; } = null!;
-
         // Navigation Property
+        [ValidateNever]
+
         public ICollection<Score> Scores { get; set; } = new List<Score>();
     }
 }

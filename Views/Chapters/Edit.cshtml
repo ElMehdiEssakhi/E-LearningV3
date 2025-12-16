@@ -1,0 +1,102 @@
+﻿@model E_LearningV3.Models.Chapter
+
+@{
+    ViewData["Title"] = "Edit Chapter";
+}
+
+<h1>Edit Chapter</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" asp-for="ChapId" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="CourseId" class="control-label"></label>
+                <select asp-for="CourseId" class="form-control" asp-items="ViewBag.CourseId"></select>
+                <span asp-validation-for="CourseId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save Chapter" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<hr />
+
+<h3>Contents</h3>
+<p>
+    <a asp-controller="Contents" asp-action="Create" asp-route-chapId="@Model.ChapId" class="btn btn-success mb-3">
+        Add New Content
+    </a>
+</p>
+
+@if (Model.Contents != null && Model.Contents.Any())
+{
+    <div class="list-group mb-4">
+        @foreach (var content in Model.Contents)
+        {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <span>@content.Type - @content.ContentLink</span>
+                <span>
+                    <a asp-controller="Contents" asp-action="Edit" asp-route-id="@content.ContentId" class="btn btn-sm btn-warning me-1">Edit</a>
+                    <a asp-controller="Contents" asp-action="Delete" asp-route-id="@content.ContentId" class="btn btn-sm btn-danger">Delete</a>
+                </span>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info mb-4">
+        No contents yet. Click "Add New Content" to start building this chapter.
+    </div>
+}
+
+<h3>Quizzes</h3>
+<p>
+    <a asp-controller="Quizzes" asp-action="Create" asp-route-chapId="@Model.ChapId" class="btn btn-success mb-3">
+        Add New Quiz
+    </a>
+</p>
+
+@if (Model.Quizzes != null && Model.Quizzes.Any())
+{
+    <div class="list-group">
+        @foreach (var quiz in Model.Quizzes)
+        {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <span>@quiz.Title</span>
+                <span>
+                    <a asp-controller="Quizzes" asp-action="Edit" asp-route-id="@quiz.QuizId" class="btn btn-sm btn-warning me-1">Edit</a>
+                    <a asp-controller="Quizzes" asp-action="Delete" asp-route-id="@quiz.QuizId" class="btn btn-sm btn-danger">Delete</a>
+                </span>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        No quizzes yet. Click "Add New Quiz" to create one.
+    </div>
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

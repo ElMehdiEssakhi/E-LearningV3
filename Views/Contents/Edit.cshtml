@@ -1,0 +1,43 @@
+﻿@model E_LearningV3.Models.Content
+
+@{
+    ViewData["Title"] = "Edit Content";
+    var typeList = ViewData["TypeList"] as SelectList;
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" asp-for="ContentId" />
+            <input type="hidden" asp-for="ChapId" /> <!-- bind chapter ID from route -->
+
+            <div class="form-group mb-3">
+                <label asp-for="Type" class="control-label"></label>
+                <select asp-for="Type" class="form-control" asp-items="typeList"></select>
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ContentLink" class="control-label"></label>
+                <input asp-for="ContentLink" class="form-control" placeholder="URL or Text" />
+                <span asp-validation-for="ContentLink" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save Content" class="btn btn-primary" />
+                <a asp-controller="Chapters" asp-action="Edit" asp-route-id="@Model.ChapId" class="btn btn-secondary ms-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

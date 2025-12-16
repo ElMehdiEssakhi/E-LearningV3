@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace E_LearningV3.Controllers
 {
@@ -9,9 +11,11 @@ namespace E_LearningV3.Controllers
     public class ProfController : Controller
     {
         private readonly UserManager<User> _userManager;
-        public ProfController(UserManager<User> userManager)
+        private readonly AppDbContext _context;
+        public ProfController(UserManager<User> userManager,AppDbContext context)
         {
             _userManager = userManager;
+            _context = context;
         }
         public async Task<IActionResult> Welcome()
         {
@@ -29,6 +33,17 @@ namespace E_LearningV3.Controllers
             }
 
             return View();
+        }
+
+        public async Task<IActionResult> MyCourses()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var courses = await _context.Courses
+                .Where(c => c.Professor.UserId == userId)
+                .AsNoTracking()
+                .ToListAsync();
+            return View(courses);
         }
         public IActionResult Index()
         {
