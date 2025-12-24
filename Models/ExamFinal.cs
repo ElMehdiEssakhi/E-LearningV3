@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_LearningV3.Models
@@ -18,9 +19,12 @@ namespace E_LearningV3.Models
         [Column(TypeName = "nvarchar(max)")]
         public string AnswersJson { get; set; } = null!;
 
+        public bool IsLocked { get; set; } = false;
+
         // Foreign Key to Course
         public int CourseId { get; set; }
         [ForeignKey("CourseId")]
+        [ValidateNever]
         public Course Course { get; set; } = null!;
     }
 }

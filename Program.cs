@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System;
-
+using QuestPDF.Fluent;
+using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,11 +33,13 @@ builder.Services.AddDefaultIdentity<User>(options =>
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<AppDbContext>();
 
-builder.Services.AddScoped<IClaimsTransformation, ProfessorClaimsTransformation>();
+builder.Services.AddScoped<IClaimsTransformation, PrStClaimsTransformation>();
+//builder.Services.AddScoped<IClaimsTransformation,   StudentClaimsTransformation>();
 builder.Services.AddScoped<ChapterService>();
 builder.Services.AddScoped<ContentService>();
 builder.Services.AddScoped<QuizService>();
-
+builder.Services.AddScoped<CertificateService>();
+QuestPDF.Settings.License = LicenseType.Community;
 
 
 

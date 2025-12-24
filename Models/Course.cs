@@ -22,10 +22,11 @@ namespace E_LearningV3.Models
         [ValidateNever]
         public Professor Professor { get; set; } = null!;
 
+        public ExamFinal? ExamFinal { get; set; }
+
         // Navigation Properties
         public ICollection<Chapter> Chapters { get; set; } = new List<Chapter>();
         public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
-        public ICollection<ExamFinal> ExamFinales { get; set; } = new List<ExamFinal>();
         public ICollection<Certificate> Certificates { get; set; } = new List<Certificate>();
     }
 }

@@ -1,36 +1,51 @@
 ﻿@model E_LearningV3.Models.Course
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Course Details";
 }
 
-<h1>Details</h1>
+<div class="container mt-4">
 
-<div>
-    <h4>Course</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CourseName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CourseName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Professor)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Professor.UserId)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.CourseId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <!-- Course Header -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="card-title fw-bold">@Model.CourseName</h2>
+
+            <p class="text-muted mb-2">
+                Taught by <strong>@Model.Professor?.User?.FullName</strong>
+            </p>
+
+            
+            <strong class="card-text mt-3">
+                Description:
+            </strong>
+            <p class="card-text mt-3">
+                @Model.Description
+            </p>
+
+            <div class="mt-4">
+                @if (User.IsInRole("Student"))
+                {
+                    <form asp-controller="Enrollments" asp-action="Enroll" method="post" class="d-inline">
+                        <input type="hidden" name="courseId" value="@Model.CourseId" />
+                        <button type="submit" class="btn btn-success">Enroll in this course</button>
+                    </form>
+                }
+                @if (ViewData["ReturnUrl"] != null)
+                {
+                    <a href="@ViewData["ReturnUrl"]" class="btn btn-secondary">
+                        ← Back
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Student" asp-action="Browse" class="btn btn-secondary">
+                        ← Back
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+
+
 </div>

@@ -1,0 +1,150 @@
+﻿@model E_LearningV3.Models.Course
+@{
+    var selectedChapter = ViewBag.SelectedChapter as Chapter;
+}
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- LEFT: Chapters -->
+        <div class="col-md-3 border-end bg-light vh-100 p-3">
+            <h5 class="fw-bold mb-3">📚 Chapters</h5>
+
+            <div class="list-group">
+                @foreach (var chap in Model.Chapters)
+                {
+                    <a asp-action="Learn"
+                       asp-route-id="@Model.CourseId"
+                       asp-route-chapterId="@chap.ChapId"
+                       class="list-group-item list-group-item-action
+                           @(selectedChapter?.ChapId == chap.ChapId ? "active" : "")">
+                        @chap.Title
+                    </a>
+                }
+                @if (ViewBag.FinalExam != null)
+                {
+                    <a asp-action="Learn"
+                       asp-route-id="@Model.CourseId"
+                       asp-route-examId="@ViewBag.FinalExam.ExamFinalId"
+                       class="list-group-item list-group-item-action
+                       @(ViewBag.FinalExamSelected == true ? "active" : "")">
+                        🎓 Final Exam: @ViewBag.FinalExam.Title
+                        @if (ViewBag.FinalExamPassed == true)
+                        {
+                            <span class="badge bg-success ms-2">✅ Completed</span>
+                        }
+                    </a>
+                }
+            </div>
+        </div>
+
+        <!-- CENTER: Content -->
+        <div class="col-md-9 p-4">
+            @if (ViewBag.SelectedChapter == null && ViewBag.SelectedExam == null)
+            {
+                <div class="alert alert-info">
+                    No chapter or exam selected.
+                </div>
+            }
+            else if (ViewBag.SelectedChapter != null)
+            {
+                //var selectedChapter = ViewBag.SelectedChapter as Chapter;
+                <h3 class="fw-bold mb-3">@selectedChapter.Title</h3>
+
+                @if (selectedChapter.Contents == null || !selectedChapter.Contents.Any())
+                {
+                    <div class="alert alert-warning">
+                        No content available for this chapter.
+                    </div>
+                }
+                else
+                {
+                    @foreach (var content in selectedChapter.Contents)
+                    {
+                        <div class="card mb-3 shadow-sm">
+                            <div class="card-body">
+                                <h6 class="fw-bold">@content.Type</h6>
+
+                                @if (content.Type == Content.ContentType.Video)
+                                {
+                                    <div class="ratio ratio-16x9 mx-auto" style="max-width: 900px;">
+                                        <iframe src="@content.ContentLink"
+                                                title="YouTube video player"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowfullscreen>
+                                        </iframe>
+                                    </div>
+                                }
+                                else if (content.Type == Content.ContentType.Pdf)
+                                {
+                                    <iframe src="@content.ContentLink"
+                                            class="w-100"
+                                            style="height:500px;"></iframe>
+                                }
+                                else
+                                {
+                                    <p>@content.ContentLink</p>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+
+                @if (selectedChapter.Quizzes.Any())
+                {
+                    <div class="text-end mt-4">
+                        @if (ViewBag.QuizPassed == true)
+                        {
+                            <span class="btn btn-success btn-lg disabled">
+                                ✅ Completed
+                            </span>
+                        }
+                        else
+                        {
+                            <a asp-controller="Quiz"
+                               asp-action="Take"
+                               asp-route-chapterId="@selectedChapter.ChapId"
+                               class="btn btn-success btn-lg">
+                                ✅ Mark as Complete & Take Quiz
+                            </a>
+                        }
+                    </div>
+                }
+            }
+            else if (ViewBag.SelectedExam != null)
+            {
+                var exam = ViewBag.SelectedExam as ExamFinal;
+                <h3 class="fw-bold mb-3">🎓 Final Exam: @exam.Title</h3>
+
+                @if (ViewBag.FinalExamPassed == true)
+                {
+                    <span class="btn btn-success btn-lg disabled">
+                        ✅ Completed
+                    </span>
+                    @if (ViewBag.CertificateId != null)
+                    {
+                        <div class="mt-3">
+                            <a asp-controller="Certificates"
+                               asp-action="Download"
+                               asp-route-id="@ViewBag.CertificateId"
+                               class="btn btn-outline-primary btn-lg">
+                                📄 Download Certificate
+                            </a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <a asp-controller="ExamFinals"
+                       asp-action="TakeExam"
+                       asp-route-id="@exam.ExamFinalId"
+                       class="btn btn-primary btn-lg">
+                        📝 Take Final Exam
+                    </a>
+                }
+            }
+        </div>
+
+
+    </div>
+</div>

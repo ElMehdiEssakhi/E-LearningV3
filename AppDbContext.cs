@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using System.Security.Cryptography.X509Certificates;
 
 namespace E_LearningV3
 {
@@ -23,6 +24,7 @@ namespace E_LearningV3
         public DbSet<Enrollment> Enrollments { get; set; } = null!;
         public DbSet<Quiz> Quizzes { get; set; } = null!;
         public DbSet<ExamFinal> ExamFinales { get; set; } = null!;
+        public DbSet<ExamScore> ExamScores { get; set; } = null!;
         public DbSet<Score> Scores { get; set; } = null!;
         public DbSet<Certificate> Certificates { get; set; } = null!;
         //public DbSet<StudentChapterProgress> StudentChapterProgress { get; set; } = null!;

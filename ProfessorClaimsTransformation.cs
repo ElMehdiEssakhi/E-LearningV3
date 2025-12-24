@@ -3,39 +3,49 @@ using E_LearningV3;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
-public class ProfessorClaimsTransformation : IClaimsTransformation
+public class PrStClaimsTransformation : IClaimsTransformation
 {
     private readonly AppDbContext _context;
 
-    public ProfessorClaimsTransformation(AppDbContext context)
+    public PrStClaimsTransformation(AppDbContext context)
     {
         _context = context;
     }
 
     public async Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
     {
-        if (!principal.Identity!.IsAuthenticated)
-            return principal;
+        if (!principal.Identity!.IsAuthenticated) return principal;
 
-        // Avoid duplicate claim
-        if (principal.HasClaim(c => c.Type == "ProfessorId"))
-            return principal;
-
+        var clone = principal.Clone();
+        var newIdentity = (ClaimsIdentity)clone.Identity!;
         var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
-            return principal;
 
-        var professorId = await _context.Professors
-            .Where(p => p.UserId == userId)
-            .Select(p => p.ProfessorId)
-            .FirstOrDefaultAsync();
+        if (userId == null) return principal;
 
-        if (professorId == 0)
-            return principal;
+        // 1. Handle Professor Claim
+        if (!principal.HasClaim(c => c.Type == "ProfessorId"))
+        {
+            var profId = await _context.Professors
+                .Where(p => p.UserId == userId)
+                .Select(p => p.ProfessorId)
+                .FirstOrDefaultAsync();
 
-        var identity = (ClaimsIdentity)principal.Identity;
-        identity.AddClaim(new Claim("ProfessorId", professorId.ToString()));
+            if (profId != 0)
+                newIdentity.AddClaim(new Claim("ProfessorId", profId.ToString()));
+        }
 
-        return principal;
+        // 2. Handle Student Claim
+        if (!principal.HasClaim(c => c.Type == "StudentId"))
+        {
+            var studentId = await _context.Students
+                .Where(s => s.UserId == userId)
+                .Select(s => s.StudentId)
+                .FirstOrDefaultAsync();
+
+            if (studentId != 0)
+                newIdentity.AddClaim(new Claim("StudentId", studentId.ToString()));
+        }
+
+        return clone;
     }
 }

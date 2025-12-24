@@ -73,7 +73,14 @@ namespace E_LearningV3.Controllers
             ViewData["TypeList"] = new SelectList(Enum.GetValues(typeof(Content.ContentType)));
             return View(content);
         }
-
+        public string ConvertToEmbed(string url)
+        {
+            if (url.Contains("watch?v="))
+            {
+                return url.Replace("watch?v=", "embed/");
+            }
+            return url;
+        }
         // GET: Contents/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {

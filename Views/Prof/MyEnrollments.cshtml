@@ -1,0 +1,39 @@
+﻿@model IEnumerable<E_LearningV3.Models.Course>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Instructor Dashboard: My Enrollments</h2>
+
+    <div class="row">
+        @foreach (var course in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">@course.CourseName</h5>
+                        <p class="card-text text-muted small">
+                            @(course.Description.Length > 100 ? course.Description.Substring(0, 100) + "..." : course.Description)
+                        </p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Total Students
+                            <span class="badge bg-success rounded-pill">@course.Enrollments.Count</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Completion Rate
+                            @{
+                                var completed = course.Enrollments.Count(e => e.CompletionStatus == "Completed");
+                                var total = course.Enrollments.Count;
+                                var rate = total > 0 ? (completed * 100 / total) : 0;
+                            }
+                            <span class="text-muted small">@rate%</span>
+                        </li>
+                    </ul>
+                    <div class="card-footer bg-transparent border-top-0">
+                        <a asp-controller="Courses" asp-action="Edit" asp-route-id="@course.CourseId" class="btn btn-outline-primary btn-sm w-100">Manage Course</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

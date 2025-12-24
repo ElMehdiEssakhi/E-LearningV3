@@ -1,0 +1,73 @@
+﻿@model IEnumerable<E_LearningV3.Models.Course>
+
+@{
+    ViewData["Title"] = "Browse Courses";
+    // Retrieve the HashSet from ViewBag
+    var enrolledIds = ViewBag.EnrolledCourseIds as HashSet<int> ?? new HashSet<int>();
+}
+
+<div class="container mt-4">
+    <h2>Browse Courses</h2>
+    @if (!string.IsNullOrEmpty(ViewData["Search"] as string))
+    {
+        <p class="text-muted">
+            Results for "<strong>@ViewData["Search"]</strong>"
+        </p>
+    }
+    <hr />
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning">
+            No courses found.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var course in Model)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">@course.CourseName</h5>
+                            <p class="card-text text-muted">
+                                @(course.Description.Length > 100 ? course.Description.Substring(0, 100) + "..." : course.Description)
+                            </p>
+                        </div>
+                        <div class="card-footer bg-white border-top-0 text-end">
+                            @* Always show the View/Details button *@
+                            <a asp-controller="Courses"
+                               asp-action="Details"
+                               asp-route-id="@course.CourseId"
+                               asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString"
+                               class="btn btn-sm btn-outline-primary">
+                                Details
+                            </a>
+
+                            @if (enrolledIds.Contains(course.CourseId))
+                            {
+                                @* If enrolled: Show Start/Continue button *@
+                                <a asp-controller="Student"
+                                   asp-action="Learn"
+                                   asp-route-id="@course.CourseId"
+                                   class="btn btn-sm btn-primary">
+                                    <i class="bi bi-play-fill"></i> Continue
+                                </a>
+                            }
+                            else
+                            {
+                                @* If NOT enrolled: Show Enroll form *@
+                                <form asp-controller="Enrollments" asp-action="Enroll" method="post" class="d-inline">
+                                    <input type="hidden" name="courseId" value="@course.CourseId" />
+                                    <button type="submit" class="btn btn-sm btn-success">
+                                        Enroll Now
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

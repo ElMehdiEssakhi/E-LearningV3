@@ -10,11 +10,13 @@ namespace E_LearningV3.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<User> userManager)
+        public HomeController(ILogger<HomeController> logger, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _logger = logger;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public async Task<IActionResult> Index()
@@ -22,6 +24,14 @@ namespace E_LearningV3.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var user = await _userManager.GetUserAsync(User);
+
+                // Check if the user was deleted but the cookie still exists
+                if (user == null)
+                {
+                    // Optional: Sign out the user to clear the stale cookie
+                    await _signInManager.SignOutAsync();
+                    return View();
+                }
 
                 if (await _userManager.IsInRoleAsync(user, "Prof"))
                 {

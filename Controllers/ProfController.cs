@@ -19,18 +19,22 @@ namespace E_LearningV3.Controllers
         }
         public async Task<IActionResult> Welcome()
         {
-            // 1. Get the current user
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var currentUser = await _userManager.GetUserAsync(User);
 
-            if (currentUser != null)
-            {
-                // 2. Access the custom property
-                ViewData["DisplayName"] = currentUser.FullName;
-            }
-            else
-            {
-                ViewData["DisplayName"] = "Professor";
-            }
+            var latestEnrollment = await _context.Enrollments
+                .Include(e => e.Course)
+                .Include(e => e.Student)
+                .ThenInclude(s => s.User)
+                .Where(e => e.Course.Professor.UserId == userId)
+                .OrderByDescending(e => e.EnrollmentDate) 
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+            ViewData["DisplayName"] = currentUser?.FullName ?? "Professor";
+
+            // Pass the enrollment to the view via ViewData or a ViewModel
+            ViewData["LatestEnrollment"] = latestEnrollment;
 
             return View();
         }
@@ -41,6 +45,18 @@ namespace E_LearningV3.Controllers
 
             var courses = await _context.Courses
                 .Where(c => c.Professor.UserId == userId)
+                .AsNoTracking()
+                .ToListAsync();
+            return View(courses);
+        }
+
+        public async Task<IActionResult> MyEnrollments()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var courses = await _context.Courses
+                .Where(c => c.Professor.UserId == userId)
+                .Include(c => c.Enrollments)
                 .AsNoTracking()
                 .ToListAsync();
             return View(courses);

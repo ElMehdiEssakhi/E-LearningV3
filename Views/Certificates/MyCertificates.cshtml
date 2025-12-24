@@ -1,0 +1,38 @@
+﻿@model List<E_LearningV3.Models.Certificate>
+
+<h2 class="mb-4">🎓 My Certificates</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        You have not earned any certificates yet.
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Course</th>
+                <th>Issued At</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cert in Model)
+            {
+                <tr>
+                    <td>@cert.Course.CourseName</td>
+                    <td>@cert.IssuedAt.ToString("dd MMM yyyy")</td>
+                    <td>
+                        <a asp-action="Download"
+                           asp-route-id="@cert.CertificateId"
+                           class="btn btn-sm btn-outline-primary">
+                            📄 Download
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

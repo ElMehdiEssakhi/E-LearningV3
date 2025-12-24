@@ -2,6 +2,7 @@
     // Sets the title for the browser tab
     ViewData["Title"] = "Professor Welcome";
     string displayName = (string)ViewData["DisplayName"];
+    var latest = ViewData["LatestEnrollment"] as Enrollment;
 }
 
 <div class="container my-5">
@@ -17,13 +18,36 @@
         <div class="col-md-6">
             <h3>Quick Links</h3>
             <ul>
-                <li><a href="#">View Enrollment</a></li>
-                <li><a href="#">Submit Grades</a></li>
+                <li><a asp-controller="Prof" asp-action="MyEnrollments" >View Enrollment</a></li>
             </ul>
         </div>
         <div class="col-md-6">
-            <h3>Recent Notifications</h3>
-            <p>New student added to CS101.</p>
+            <h3>Recent Enrollments</h3>
+            @if (latest != null)
+            {
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Newest Student
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    @latest.Student.User.FullName
+                                </div>
+                                <p class="text-muted small">
+                                    Enrolled in <strong>@latest.Course.CourseName</strong>
+                                    on @latest.EnrollmentDate.ToString("MMM dd, yyyy")
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">No recent enrollments found.</p>
+            }
         </div>
     </div>
 </div>

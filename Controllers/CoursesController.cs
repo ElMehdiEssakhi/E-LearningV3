@@ -31,7 +31,7 @@ namespace E_LearningV3.Controllers
         }
 
         // GET: Courses/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string? returnUrl)
         {
             if (id == null)
             {
@@ -39,13 +39,13 @@ namespace E_LearningV3.Controllers
             }
 
             var course = await _context.Courses
-                .Include(c => c.Professor)
+                .Include(c => c.Professor).ThenInclude(p => p.User)
                 .FirstOrDefaultAsync(m => m.CourseId == id);
             if (course == null)
             {
                 return NotFound();
             }
-
+            ViewData["ReturnUrl"] = returnUrl;
             return View(course);
         }
 
@@ -81,7 +81,13 @@ namespace E_LearningV3.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             int professorId = int.Parse(User.FindFirst("ProfessorId")!.Value);
-            var course = await _context.Courses.AsNoTracking().FirstOrDefaultAsync(c => c.CourseId == id && c.ProfessorId == professorId);
+
+            var course = await _context.Courses
+                .Include(c => c.ExamFinal)   // ✅ IMPORTANT
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c =>
+                c.CourseId == id &&
+                c.ProfessorId == professorId);
             if (course == null)
                 return NotFound(); // or Forbid()
             course.Chapters = await _chapterService.GetChaptersByCourseId(course.CourseId);

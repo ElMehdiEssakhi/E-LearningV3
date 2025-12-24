@@ -4,6 +4,7 @@ using E_LearningV3;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_LearningV3.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251221154000_lockexam")]
+    partial class lockexam
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,12 +36,12 @@ namespace E_LearningV3.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("IssuedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Link")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
@@ -189,37 +192,9 @@ namespace E_LearningV3.Migrations
 
                     b.HasKey("ExamFinalId");
 
-                    b.HasIndex("CourseId")
-                        .IsUnique();
+                    b.HasIndex("CourseId");
 
                     b.ToTable("ExamFinales");
-                });
-
-            modelBuilder.Entity("E_LearningV3.Models.ExamScore", b =>
-                {
-                    b.Property<int>("ExamScoreId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExamScoreId"));
-
-                    b.Property<int>("ExamFinalId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ScoreValue")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TakenAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ExamScoreId");
-
-                    b.HasIndex("ExamFinalId");
-
-                    b.ToTable("ExamScores");
                 });
 
             modelBuilder.Entity("E_LearningV3.Models.Professor", b =>
@@ -607,23 +582,12 @@ namespace E_LearningV3.Migrations
             modelBuilder.Entity("E_LearningV3.Models.ExamFinal", b =>
                 {
                     b.HasOne("E_LearningV3.Models.Course", "Course")
-                        .WithOne("ExamFinal")
-                        .HasForeignKey("E_LearningV3.Models.ExamFinal", "CourseId")
+                        .WithMany("ExamFinales")
+                        .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Course");
-                });
-
-            modelBuilder.Entity("E_LearningV3.Models.ExamScore", b =>
-                {
-                    b.HasOne("E_LearningV3.Models.ExamFinal", "ExamFinal")
-                        .WithMany()
-                        .HasForeignKey("ExamFinalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ExamFinal");
                 });
 
             modelBuilder.Entity("E_LearningV3.Models.Professor", b =>
@@ -744,7 +708,7 @@ namespace E_LearningV3.Migrations
 
                     b.Navigation("Enrollments");
 
-                    b.Navigation("ExamFinal");
+                    b.Navigation("ExamFinales");
                 });
 
             modelBuilder.Entity("E_LearningV3.Models.Professor", b =>
