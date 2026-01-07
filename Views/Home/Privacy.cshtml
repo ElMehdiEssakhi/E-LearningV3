@@ -1,6 +1,129 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<style>
+    /* Consistent Admin/Public Styling */
+    .page-header {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid #e5e7eb;
+    }
+
+    .page-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #667eea;
+        margin: 0;
+    }
+
+    .page-subtitle {
+        color: #64748b;
+        margin-top: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .content-card {
+        background: white;
+        border-radius: 8px;
+        padding: 2.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid #e5e7eb;
+        margin-bottom: 2rem;
+        color: #334155;
+        line-height: 1.7;
+    }
+
+    .policy-section {
+        margin-bottom: 2rem;
+    }
+
+        .policy-section:last-child {
+            margin-bottom: 0;
+        }
+
+    .policy-heading {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .policy-list {
+        padding-left: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+        .policy-list li {
+            margin-bottom: 0.5rem;
+        }
+
+    .contact-highlight {
+        background: #f8fafc;
+        border-left: 4px solid #667eea;
+        padding: 1rem;
+        border-radius: 0 4px 4px 0;
+    }
+</style>
+
+<div class="page-header">
+    <h1 class="page-title">@ViewData["Title"]</h1>
+    <p class="page-subtitle">Last Updated: @DateTime.Now.ToString("MMMM dd, yyyy")</p>
+</div>
+
+<div class="content-card">
+    <div class="policy-section">
+        <h2 class="policy-heading">1. Introduction</h2>
+        <p>
+            Welcome to <strong>E-LearningV3</strong>. We respect your privacy and are committed to protecting your personal data.
+            This privacy policy will inform you as to how we look after your personal data when you visit our website
+            and tell you about your privacy rights.
+        </p>
+    </div>
+
+    <div class="policy-section">
+        <h2 class="policy-heading">2. Information We Collect</h2>
+        <p>We may collect, use, store and transfer different kinds of personal data about you which we have grouped together follows:</p>
+        <ul class="policy-list">
+            <li><strong>Identity Data:</strong> includes first name, last name, username, or similar identifier.</li>
+            <li><strong>Contact Data:</strong> includes email address and telephone numbers.</li>
+            <li><strong>Technical Data:</strong> includes internet protocol (IP) address, your login data, browser type and version.</li>
+            <li><strong>Usage Data:</strong> includes information about how you use our courses, quizzes, and exams.</li>
+        </ul>
+    </div>
+
+    <div class="policy-section">
+        <h2 class="policy-heading">3. How We Use Your Data</h2>
+        <p>We will only use your personal data when the law allows us to. Most commonly, we will use your personal data in the following circumstances:</p>
+        <ul class="policy-list">
+            <li>To register you as a new student or professor.</li>
+            <li>To manage your relationship with us (including notifying you about changes to terms or privacy policy).</li>
+            <li>To administer and protect our business and this website.</li>
+            <li>To deliver relevant course content and measure your progress (e.g., grading quizzes and exams).</li>
+        </ul>
+    </div>
+
+    <div class="policy-section">
+        <h2 class="policy-heading">4. Data Security</h2>
+        <p>
+            We have put in place appropriate security measures to prevent your personal data from being accidentally lost, used,
+            or accessed in an unauthorized way. In addition, we limit access to your personal data to those employees, agents,
+            contractors, and other third parties who have a business need to know.
+        </p>
+    </div>
+
+    <div class="policy-section">
+        <h2 class="policy-heading">5. Contact Us</h2>
+        <p>If you have any questions about this privacy policy or our privacy practices, please contact us:</p>
+        <div class="contact-highlight">
+            <strong>E-Learning Support Team</strong><br />
+            Email: <a href="mailto:support@elearningv3.com" style="color: #667eea; text-decoration: none;">support@elearningv3.com</a><br />
+            Phone: +212 66385 8742
+        </div>
+    </div>
+</div>

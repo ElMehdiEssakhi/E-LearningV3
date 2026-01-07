@@ -4,136 +4,384 @@
     ViewData["Title"] = "Edit Course";
 }
 
-<h1>Edit Course</h1>
+<style>
+    /* Unified Design System
+           Matches Edit Chapter, Create Quiz, etc.
+        */
+    .page-header {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid #e5e7eb;
+    }
 
-<hr />
+    .page-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #667eea;
+        margin: 0;
+    }
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    .form-card, .section-card {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid #e5e7eb;
+        margin-bottom: 2rem;
+    }
 
-            <!-- Hidden field for CourseId -->
-            <input type="hidden" asp-for="CourseId" />
+    /* Form Specifics */
+    .form-card {
+        max-width: 700px;
+    }
 
-            <div class="form-group mb-3">
-                <label asp-for="CourseName" class="control-label"></label>
-                <input asp-for="CourseName" class="form-control" />
-                <span asp-validation-for="CourseName" class="text-danger"></span>
-            </div>
+    .form-label {
+        font-weight: 500;
+        color: #4b5563;
+        margin-bottom: 0.5rem;
+    }
 
-            <div class="form-group mb-3">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
+    .form-control {
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        padding: 0.75rem;
+        font-size: 0.95rem;
+        width: 100%;
+    }
 
-            <div class="form-group">
-                <input type="submit" value="Save Course" class="btn btn-primary" />
-                <a asp-action="MyCourses" class="btn btn-secondary ms-2">Cancel</a>
-            </div>
-        </form>
-    </div>
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            outline: none;
+        }
+
+    textarea.form-control {
+        min-height: 120px;
+    }
+
+    .text-danger {
+        color: #dc2626;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+
+    /* Section Headers */
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #e5e7eb;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin: 0;
+    }
+
+    /* Item Lists (Chapters/Exams) */
+    .item-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .item-card {
+        background: #f8f9fa;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 1rem 1.25rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .item-card:hover {
+            background: #f0f0f0;
+            border-color: #667eea;
+        }
+
+    .item-info {
+        font-weight: 500;
+        color: #2d3748;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .item-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    /* Buttons */
+    .btn-save {
+        background: #667eea;
+        border: none;
+        border-radius: 6px;
+        padding: 0.75rem 1.5rem;
+        color: white;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+        .btn-save:hover {
+            background: #5568d3;
+            color: white;
+        }
+
+    .btn-add {
+        background: #48bb78;
+        border: none;
+        border-radius: 6px;
+        padding: 0.5rem 1.25rem;
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+        .btn-add:hover {
+            background: #38a169;
+            color: white;
+        }
+
+    .btn-edit {
+        background: #f59e0b;
+        color: white;
+        text-decoration: none;
+        padding: 0.4rem 0.9rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+        .btn-edit:hover {
+            background: #d97706;
+            color: white;
+        }
+
+    .btn-delete {
+        background: #ef4444;
+        color: white;
+        text-decoration: none;
+        padding: 0.4rem 0.9rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+        .btn-delete:hover {
+            background: #dc2626;
+            color: white;
+        }
+
+    .btn-cancel {
+        background: white;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        padding: 0.75rem 1.5rem;
+        color: #4b5563;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+        .btn-cancel:hover {
+            background: #f8f9fa;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+    /* Exam Specifics */
+    .btn-lock {
+        background: #ef4444;
+        color: white;
+        text-decoration: none;
+        padding: 0.4rem 0.9rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .btn-unlock {
+        background: #10b981;
+        color: white;
+        text-decoration: none;
+        padding: 0.4rem 0.9rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .status-active {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+    }
+
+    .status-locked {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
+
+    .empty-message {
+        color: #6b7280;
+        font-style: italic;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 6px;
+        border: 1px dashed #e5e7eb;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+</style>
+
+<div class="page-header">
+    <h1 class="page-title">Edit Course</h1>
 </div>
 
-<hr />
+<div class="form-card">
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" style="display:none;"></div> <input type="hidden" asp-for="CourseId" />
 
-<h3>Chapters</h3>
+        <div class="form-group">
+            <label asp-for="CourseName" class="form-label">Course Name</label>
+            <input asp-for="CourseName" class="form-control" />
+            <span asp-validation-for="CourseName" class="text-danger"></span>
+        </div>
 
-<p>
-    <a asp-controller="Chapters" asp-action="Create" asp-route-courseId="@Model.CourseId" class="btn btn-success mb-3">
-        Add New Chapter
-    </a>
-</p>
+        <div class="form-group">
+            <label asp-for="Description" class="form-label">Description</label>
+            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
 
-@if (Model.Chapters != null && Model.Chapters.Any())
-{
-    <div class="list-group">
-        @foreach (var chap in Model.Chapters)
-        {
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <span>@chap.Title</span>
-                <span>
-                    <a asp-controller="Chapters" asp-action="Edit" asp-route-id="@chap.ChapId" class="btn btn-sm btn-warning me-1">Edit</a>
-                    <a asp-controller="Chapters" asp-action="Delete" asp-route-id="@chap.ChapId" class="btn btn-sm btn-danger">Delete</a>
-                </span>
-            </div>
-        }
-    </div>
-}
-else
-{
-    <div class="alert alert-info">
-        No chapters yet. Click "Add New Chapter" to start building your course.
-    </div>
-}
+        <div class="form-actions">
+            <input type="submit" value="Save Course" class="btn-save" />
+            <a asp-action="MyCourses" class="btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
 
-<hr />
-
-<h3>🎓 Final Exam</h3>
-
-@if (Model.ExamFinal == null)
-{
-    <div class="alert alert-warning d-flex justify-content-between align-items-center">
-        <span>No final exam created for this course.</span>
-
-        <a asp-controller="ExamFinals"
-           asp-action="Create"
-           asp-route-courseId="@Model.CourseId"
-           class="btn btn-success">
-            ➕ Create Final Exam
+<div class="section-card">
+    <div class="section-header">
+        <h3 class="section-title">Chapters</h3>
+        <a asp-controller="Chapters" asp-action="Create" asp-route-courseId="@Model.CourseId" class="btn-add">
+            + Add New Chapter
         </a>
     </div>
-}
-else
-{
-    <div class="card shadow-sm">
-        <div class="card-body d-flex justify-content-between align-items-center">
 
-            <div>
-                <h5 class="mb-1">@Model.ExamFinal.Title</h5>
-
-                @if (Model.ExamFinal.IsLocked)
-                {
-                    <span class="badge bg-danger">🔒 Locked</span>
-                }
-                else
-                {
-                    <span class="badge bg-success">🟢 Active</span>
-                }
-            </div>
-
-            <div>
-                <a asp-controller="ExamFinals"
-                   asp-action="Edit"
-                   asp-route-id="@Model.ExamFinal.ExamFinalId"
-                   class="btn btn-sm btn-warning me-1">
-                    ✏ Edit
-                </a>
-
-                @if (Model.ExamFinal.IsLocked)
-                {
-                    <a asp-controller="ExamFinals"
-                       asp-action="ToggleLock"
-                       asp-route-id="@Model.ExamFinal.ExamFinalId"
-                       class="btn btn-sm btn-success">
-                        🔓 Unlock
-                    </a>
-                }
-                else
-                {
-                    <a asp-controller="ExamFinals"
-                       asp-action="ToggleLock"
-                       asp-route-id="@Model.ExamFinal.ExamFinalId"
-                       class="btn btn-sm btn-danger">
-                        🔒 Lock
-                    </a>
-                }
-            </div>
-
+    @if (Model.Chapters != null && Model.Chapters.Any())
+    {
+        <div class="item-list">
+            @foreach (var chap in Model.Chapters)
+            {
+                <div class="item-card">
+                    <div class="item-info">@chap.Title</div>
+                    <div class="item-actions">
+                        <a asp-controller="Chapters" asp-action="Edit" asp-route-id="@chap.ChapId" class="btn-edit">Edit</a>
+                        <a asp-controller="Chapters" asp-action="Delete" asp-route-id="@chap.ChapId" class="btn-delete">Delete</a>
+                    </div>
+                </div>
+            }
         </div>
+    }
+    else
+    {
+        <p class="empty-message">No chapters yet. Click "Add New Chapter" to start building your course.</p>
+    }
+</div>
+
+<div class="section-card">
+    <div class="section-header">
+        <h3 class="section-title">🎓 Final Exam</h3>
+        @if (Model.ExamFinal == null)
+        {
+            <a asp-controller="ExamFinals" asp-action="Create" asp-route-courseId="@Model.CourseId" class="btn-add">
+                + Create Final Exam
+            </a>
+        }
     </div>
-}
+
+    @if (Model.ExamFinal == null)
+    {
+        <p class="empty-message">No final exam created for this course yet.</p>
+    }
+    else
+    {
+        <div class="item-list">
+            <div class="item-card">
+                <div class="item-info">
+                    <span>@Model.ExamFinal.Title</span>
+
+                    @if (Model.ExamFinal.IsLocked)
+                    {
+                        <span class="status-badge status-locked">🔒 Locked</span>
+                    }
+                    else
+                    {
+                        <span class="status-badge status-active">🟢 Active</span>
+                    }
+                </div>
+
+                <div class="item-actions">
+                    <a asp-controller="ExamFinals"
+                       asp-action="Edit"
+                       asp-route-id="@Model.ExamFinal.ExamFinalId"
+                       class="btn-edit">
+                        Edit
+                    </a>
+
+                    @if (Model.ExamFinal.IsLocked)
+                    {
+                        <a asp-controller="ExamFinals"
+                           asp-action="ToggleLock"
+                           asp-route-id="@Model.ExamFinal.ExamFinalId"
+                           class="btn-unlock">
+                            🔓 Unlock
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="ExamFinals"
+                           asp-action="ToggleLock"
+                           asp-route-id="@Model.ExamFinal.ExamFinalId"
+                           class="btn-lock">
+                            🔒 Lock
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
 
 @section Scripts {
     @{

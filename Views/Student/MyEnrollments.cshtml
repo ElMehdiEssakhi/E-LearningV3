@@ -4,32 +4,171 @@
     ViewData["Title"] = "My Courses";
 }
 
-<h1>@ViewData["Title"]</h1>
+<style>
+    .page-header {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid #e5e7eb;
+    }
+
+    .page-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #667eea;
+        margin: 0;
+    }
+
+    .empty-state {
+        background: white;
+        border-radius: 8px;
+        padding: 3rem 2rem;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid #e5e7eb;
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #4b5563;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state-text {
+        color: #6b7280;
+    }
+
+    .course-item {
+        background: white;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+        .course-item:hover {
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
+        }
+
+    .course-info {
+        flex: 1;
+        min-width: 250px;
+    }
+
+    .course-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+    }
+
+    .course-description {
+        color: #6b7280;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 0.5rem;
+    }
+
+    .course-instructor {
+        color: #9ca3af;
+        font-size: 0.875rem;
+    }
+
+        .course-instructor strong {
+            color: #667eea;
+            font-weight: 500;
+        }
+
+    .course-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-details {
+        background: #667eea;
+        border: none;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        color: white;
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+        .btn-details:hover {
+            background: #5568d3;
+            color: white;
+        }
+
+    .btn-unenroll {
+        background: #ef4444;
+        border: none;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        color: white;
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+        .btn-unenroll:hover {
+            background: #dc2626;
+            color: white;
+        }
+</style>
+
+<div class="page-header">
+    <h1 class="page-title">@ViewData["Title"]</h1>
+</div>
 
 @if (!Model.Any())
 {
-    <div class="alert alert-info">
-        You are not enrolled in any courses yet.
+    <div class="empty-state">
+        <div class="empty-state-icon">📚</div>
+        <h3 class="empty-state-title">No enrollments yet</h3>
+        <p class="empty-state-text">You are not enrolled in any courses yet. Browse available courses to start learning.</p>
     </div>
 }
 else
 {
-    <div class="list-group">
+    <div>
         @foreach (var course in Model)
         {
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                    <h5>@course.CourseName</h5>
-                    <p class="mb-0">@course.Description</p>
-                    <p class="text-muted mb-0">
+            <div class="course-item">
+                <div class="course-info">
+                    <h5 class="course-name">@course.CourseName</h5>
+                    <p class="course-description">@course.Description</p>
+                    <p class="course-instructor">
                         Taught by <strong>@(course.Professor?.User.FullName ?? course.Professor?.UserId)</strong>
                     </p>
                 </div>
-                <div>
-                    <a asp-controller="Courses" asp-action="Details" asp-route-id="@course.CourseId" class="btn btn-sm btn-primary me-1">
+                <div class="course-actions">
+                    <a asp-controller="Courses"
+                       asp-action="Details"
+                       asp-route-id="@course.CourseId"
+                       class="btn-details">
                         Details
                     </a>
-                    <a asp-controller="Enrollments" asp-action="Unenroll" asp-route-courseId="@course.CourseId" class="btn btn-sm btn-danger">
+                    <a asp-controller="Enrollments"
+                       asp-action="Unenroll"
+                       asp-route-courseId="@course.CourseId"
+                       class="btn-unenroll">
                         Unenroll
                     </a>
                 </div>

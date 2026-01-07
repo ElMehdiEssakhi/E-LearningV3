@@ -2,63 +2,214 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="px-4 py-5 my-5 text-center">
-    <div class="mb-4">
-        <span class="display-1">🎓</span>
-    </div>
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 4rem 2rem;
+        margin: 2rem 0;
+        position: relative;
+        overflow: hidden;
+    }
 
-    <h1 class="display-5 fw-bold text-dark">Welcome to E_Learning</h1>
-    <div class="col-lg-6 mx-auto">
-        <p class="lead mb-4 text-muted">
-            The best place to master new skills. Access high-quality courses, expert instructors,
-            and advance your career from the comfort of your home.
-        </p>
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: pulse 15s ease-in-out infinite;
+    }
 
-        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                <a asp-area="Identity" asp-page="/Account/ChooseRole" class="btn btn-primary btn-lg px-4 gap-3 rounded-pill">
-                    Get Started
-                </a>
-                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-secondary btn-lg px-4 rounded-pill">
-                    Log In
-                </a>
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-emoji {
+        display: inline-block;
+        animation: float 3s ease-in-out infinite;
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+    }
+
+    .hero-title {
+        color: white;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-subtitle {
+        color: rgba(255,255,255,0.95);
+        text-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    }
+
+    .btn-hero-primary {
+        background: white;
+        color: #667eea;
+        border: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .btn-hero-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        background: #f8f9fa;
+    }
+
+    .btn-hero-secondary {
+        background: rgba(255,255,255,0.2);
+        color: white;
+        border: 2px solid rgba(255,255,255,0.5);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+
+    .btn-hero-secondary:hover {
+        background: rgba(255,255,255,0.3);
+        border-color: rgba(255,255,255,0.8);
+        transform: translateY(-2px);
+        color: white;
+    }
+
+    .features-section {
+        padding: 4rem 0;
+    }
+
+    .features-title {
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 3rem;
+        position: relative;
+        display: inline-block;
+    }
+
+    .features-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        border-radius: 2px;
+    }
+
+    .feature-card {
+        transition: all 0.3s ease;
+        border-radius: 15px;
+        overflow: hidden;
+        background: white;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
+    }
+
+    .feature-card .card-body {
+        transition: all 0.3s ease;
+    }
+
+    .feature-card:hover .card-body {
+        background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+    }
+
+    .feature-icon {
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .feature-card:hover .feature-icon {
+        transform: scale(1.2) rotate(5deg);
+    }
+
+    .feature-card-primary .feature-icon {
+        color: #667eea;
+    }
+
+    .feature-card-success .feature-icon {
+        color: #48bb78;
+    }
+
+    .feature-card-info .feature-icon {
+        color: #4299e1;
+    }
+
+    .feature-title {
+        color: #2d3748;
+        margin-top: 1rem;
+    }
+
+    .feature-description {
+        color: #4a5568;
+        line-height: 1.7;
+    }
+</style>
+
+<div class="container">
+    <div class="hero-section text-center">
+        <div class="hero-content">
+            <div class="mb-4">
+                <span class="display-1 hero-emoji">🎓</span>
+            </div>
+
+            <h1 class="display-4 fw-bold hero-title">Welcome to E_Learning</h1>
+            <div class="col-lg-7 mx-auto">
+                <p class="lead mb-5 hero-subtitle">
+                    The best place to master new skills. Access high-quality courses, expert instructors,
+                    and advance your career from the comfort of your home.
+                </p>
+
+                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                    <a asp-area="Identity" asp-page="/Account/ChooseRole" class="btn btn-hero-primary btn-lg px-5 py-3 rounded-pill">
+                        Get Started
+                    </a>
+                    <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-hero-secondary btn-lg px-5 py-3 rounded-pill">
+                        Log In
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="container px-4 py-5" id="features">
-    <h2 class="pb-2 border-bottom text-center mb-5">Why Choose Us?</h2>
+<div class="container features-section" id="features">
+    <h2 class="text-center features-title pb-3">Why Choose Us?</h2>
 
     <div class="row g-4 py-3 row-cols-1 row-cols-lg-3">
-
         <div class="col">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-body text-center p-4">
-                    <div class="display-6 text-primary mb-3">🚀</div>
-                    <h3 class="fs-4 fw-bold">Fast Learning</h3>
-                    <p class="text-muted">Concise and effective modules designed to get you up to speed quickly.</p>
+            <div class="card feature-card feature-card-primary h-100 shadow-sm border-0">
+                <div class="card-body text-center p-5">
+                    <div class="display-6 feature-icon mb-4">🚀</div>
+                    <h3 class="fs-4 fw-bold feature-title">Fast Learning</h3>
+                    <p class="feature-description mt-3">Concise and effective modules designed to get you up to speed quickly.</p>
                 </div>
             </div>
         </div>
 
         <div class="col">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-body text-center p-4">
-                    <div class="display-6 text-success mb-3">👨‍🏫</div>
-                    <h3 class="fs-4 fw-bold">Expert Tutors</h3>
-                    <p class="text-muted">Learn from industry professionals with real-world experience.</p>
+            <div class="card feature-card feature-card-success h-100 shadow-sm border-0">
+                <div class="card-body text-center p-5">
+                    <div class="display-6 feature-icon mb-4">👨‍🏫</div>
+                    <h3 class="fs-4 fw-bold feature-title">Expert Tutors</h3>
+                    <p class="feature-description mt-3">Learn from industry professionals with real-world experience.</p>
                 </div>
             </div>
         </div>
 
         <div class="col">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-body text-center p-4">
-                    <div class="display-6 text-info mb-3">📜</div>
-                    <h3 class="fs-4 fw-bold">Certification</h3>
-                    <p class="text-muted">Earn certificates upon completion to showcase your new skills.</p>
+            <div class="card feature-card feature-card-info h-100 shadow-sm border-0">
+                <div class="card-body text-center p-5">
+                    <div class="display-6 feature-icon mb-4">📜</div>
+                    <h3 class="fs-4 fw-bold feature-title">Certification</h3>
+                    <p class="feature-description mt-3">Earn certificates upon completion to showcase your new skills.</p>
                 </div>
             </div>
         </div>
-
     </div>
-</div>
+</div>s

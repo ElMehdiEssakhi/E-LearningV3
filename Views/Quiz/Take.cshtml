@@ -1,41 +1,212 @@
 ﻿@model E_LearningV3.ViewModels.QuizTakeVM
 
-<h3 class="fw-bold mb-4">Quiz</h3>
-
-@if (TempData["QuizError"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["QuizError"]
-    </div>
+@{
+    ViewData["Title"] = "Take Quiz";
 }
 
-<form asp-action="Submit" method="post">
-    <input type="hidden" name="QuizId" value="@Model.QuizId" />
-    <input type="hidden" name="ChapterId" value="@Model.ChapterId" />
-    <input type="hidden" name="CourseId" value="@Model.CourseId" />
+<style>
+    /* Quiz Page Styling */
+    body {
+        background-color: #f8fafc;
+    }
 
-    @for (int i = 0; i < Model.Questions.Count; i++)
+    .quiz-header-card {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        border-bottom: 4px solid #667eea;
+        text-align: center;
+    }
+
+    .quiz-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+    }
+
+    .quiz-meta {
+        color: #64748b;
+        font-size: 0.95rem;
+    }
+
+    /* Question Cards */
+    .question-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        border: 1px solid #e2e8f0;
+    }
+
+    .question-header {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .question-number {
+        background: #e0e7ff;
+        color: #4338ca;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .question-text {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #334155;
+        line-height: 1.5;
+        padding-top: 2px;
+    }
+
+    /* Answer Options */
+    .options-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding-left: 3rem;
+    }
+
+    /* Custom Radio Styling */
+    .option-wrapper {
+        position: relative;
+    }
+
+        /* Hide the actual radio but keep it accessible */
+        .option-wrapper input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+    .option-label {
+        display: block;
+        padding: 1rem 1.25rem;
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: #475569;
+        font-weight: 500;
+        position: relative;
+    }
+
+        .option-label:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+    /* Checked State */
+    .option-wrapper input[type="radio"]:checked + .option-label {
+        border-color: #667eea;
+        background-color: #eef2ff;
+        color: #4338ca;
+        font-weight: 600;
+        box-shadow: 0 0 0 1px #667eea;
+    }
+
+        /* Visual checkmark indicator */
+        .option-wrapper input[type="radio"]:checked + .option-label::after {
+            content: '✓';
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+    /* Submit Button Area */
+    .quiz-footer {
+        text-align: center;
+        margin-top: 3rem;
+        margin-bottom: 5rem;
+    }
+
+    .btn-submit-quiz {
+        background: #48bb78;
+        border: none;
+        padding: 1rem 3rem;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        font-weight: 600;
+        box-shadow: 0 4px 6px rgba(72, 187, 120, 0.3);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .btn-submit-quiz:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(72, 187, 120, 0.4);
+        }
+</style>
+
+<div class="container" style="max-width: 800px;">
+
+    <div class="quiz-header-card">
+        <h1 class="quiz-title">Quiz</h1>
+        <p class="quiz-meta">Answer all questions below. Good luck!</p>
+    </div>
+
+    @if (TempData["QuizError"] != null)
     {
-        <div class="mb-4">
-            <p class="fw-bold">
-                @(i + 1). @Model.Questions[i].QuestionText
-            </p>
-
-            @foreach (var option in Model.Questions[i].Options)
-            {
-                <div class="form-check">
-                    <input class="form-check-input"
-                           type="radio"
-                           name="UserAnswers[@i]"
-                           value="@option"
-                           required />
-                    <label class="form-check-label">@option</label>
-                </div>
-            }
+        <div class="alert alert-danger shadow-sm rounded-3 mb-4 border-0">
+            @TempData["QuizError"]
         </div>
     }
 
-    <button type="submit" class="btn btn-success btn-lg">
-        Submit Quiz
-    </button>
-</form>
+    <form asp-action="Submit" method="post">
+        <input type="hidden" name="QuizId" value="@Model.QuizId" />
+        <input type="hidden" name="ChapterId" value="@Model.ChapterId" />
+        <input type="hidden" name="CourseId" value="@Model.CourseId" />
+
+        @for (int i = 0; i < Model.Questions.Count; i++)
+        {
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-number">@(i + 1)</div>
+                    <div class="question-text">@Model.Questions[i].QuestionText</div>
+                </div>
+
+                <div class="options-grid">
+                    @foreach (var option in Model.Questions[i].Options)
+                    {
+                        var uniqueId = $"q_{i}_opt_{option.GetHashCode()}";
+
+                        <div class="option-wrapper">
+                            <input type="radio"
+                                   id="@uniqueId"
+                                   name="UserAnswers[@i]"
+                                   value="@option"
+                                   required />
+
+                            <label for="@uniqueId" class="option-label">
+                                @option
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="quiz-footer">
+            <button type="submit" class="btn btn-success btn-submit-quiz">
+                Submit Answers
+            </button>
+        </div>
+    </form>
+</div>

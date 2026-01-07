@@ -4,45 +4,186 @@
     var courses = ViewData["Courses"] as List<Course>;
 }
 
-<div class="d-flex justify-content-between align-items-center mt-4">
-    <h3>📘 My Courses</h3>
+<style>
+    .welcome-header {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid #e5e7eb;
+    }
 
-    <a asp-controller="Certificates"
-       asp-action="MyCertificates"
-       class="btn btn-success">
-        🎓 My Certifications
-    </a>
+    .welcome-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #667eea;
+        margin-bottom: 0.5rem;
+    }
+
+    .welcome-subtitle {
+        color: #6b7280;
+        font-size: 1rem;
+    }
+
+    .header-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .btn-certificates {
+        background: #48bb78;
+        border: none;
+        border-radius: 6px;
+        padding: 0.5rem 1.5rem;
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+        .btn-certificates:hover {
+            background: #38a169;
+            color: white;
+        }
+
+    .empty-state {
+        background: white;
+        border-radius: 8px;
+        padding: 3rem 2rem;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid #e5e7eb;
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #4b5563;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state-text {
+        color: #6b7280;
+    }
+
+    .course-card {
+        background: white;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+    }
+
+        .course-card:hover {
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
+            text-decoration: none;
+            color: inherit;
+        }
+
+    .course-card-body {
+        padding: 1.5rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .course-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 0.75rem;
+    }
+
+    .course-description {
+        color: #6b7280;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 0;
+        flex: 1;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+    }
+
+    .course-footer {
+        padding: 1rem 1.5rem;
+        background: #f8f9fa;
+        border-top: 1px solid #e5e7eb;
+        text-align: right;
+        margin-top: auto;
+    }
+
+    .course-btn {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background: #667eea;
+        color: white;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    .course-card:hover .course-btn {
+        background: #5568d3;
+        color: white;
+    }
+</style>
+
+<div class="welcome-header">
+    <div class="header-actions">
+        <div>
+            <h1 class="welcome-title">Welcome back, @displayName!</h1>
+            <p class="welcome-subtitle">Continue your learning journey</p>
+        </div>
+        <a asp-controller="Certificates"
+           asp-action="MyCertificates"
+           class="btn-certificates">
+            🎓 My Certifications
+        </a>
+    </div>
 </div>
 
 @if (courses == null || !courses.Any())
 {
-    <div class="alert alert-info">
-        You are not enrolled in any courses yet.
+    <div class="empty-state">
+        <div class="empty-state-icon">📚</div>
+        <h3 class="empty-state-title">No courses yet</h3>
+        <p class="empty-state-text">You are not enrolled in any courses yet. Start exploring available courses to begin your learning journey.</p>
     </div>
 }
 else
 {
-    <div class="row">
+    <div class="row g-4">
         @foreach (var course in courses)
         {
-            <div class="col-md-4 mb-3">
+            <div class="col-md-4">
                 <a asp-controller="Student"
                    asp-action="Learn"
                    asp-route-id="@course.CourseId"
-                   class="text-decoration-none">
-
-                    <div class="card shadow-sm h-100 hover-shadow">
-                        <div class="card-body">
-                            <h5>@course.CourseName</h5>
-                            <p class="text-muted">@course.Description</p>
-                        </div>
-                        <div class="card-footer text-end">
-                            <span class="btn btn-sm btn-outline-primary">
-                                Start Learning →
-                            </span>
-                        </div>
+                   class="course-card">
+                    <div class="course-card-body">
+                        <h5 class="course-title">@course.CourseName</h5>
+                        <p class="course-description">@course.Description</p>
                     </div>
-
+                    <div class="course-footer">
+                        <span class="course-btn">Start Learning →</span>
+                    </div>
                 </a>
             </div>
         }

@@ -2,64 +2,226 @@
 
 @{
     ViewData["Title"] = "Browse Courses";
-    // Retrieve the HashSet from ViewBag
     var enrolledIds = ViewBag.EnrolledCourseIds as HashSet<int> ?? new HashSet<int>();
 }
 
+<style>
+    /* Browse Page Styling */
+    body {
+        background-color: #f8fafc;
+    }
+
+    /* Course Cards */
+    .course-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-color: #cbd5e1;
+        }
+
+    .card-img-placeholder {
+        height: 140px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .course-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.75rem;
+        text-decoration: none;
+    }
+
+        .course-title:hover {
+            color: #4f46e5;
+        }
+
+    .course-desc {
+        color: #64748b;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 1.5rem;
+        flex-grow: 1;
+    }
+
+    .card-footer {
+        padding: 1rem 1.5rem;
+        background: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Badges */
+    .badge-enrolled {
+        background: #dcfce7;
+        color: #166534;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 600;
+        text-transform: uppercase;
+        border: 1px solid #bbf7d0;
+    }
+
+    /* Buttons */
+    .btn-details {
+        color: #475569;
+        font-weight: 500;
+        font-size: 0.9rem;
+        text-decoration: none;
+    }
+
+        .btn-details:hover {
+            color: #1e293b;
+            text-decoration: underline;
+        }
+
+    .btn-action {
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: none;
+        text-decoration: none;
+        transition: background-color 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .btn-enroll {
+        background: #10b981; /* Green */
+        color: white;
+    }
+
+        .btn-enroll:hover {
+            background: #059669;
+            color: white;
+        }
+
+    .btn-continue {
+        background: #6366f1; /* Indigo */
+        color: white;
+    }
+
+        .btn-continue:hover {
+            background: #4f46e5;
+            color: white;
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #64748b;
+    }
+
+    .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #cbd5e1;
+    }
+</style>
+
 <div class="container mt-4">
-    <h2>Browse Courses</h2>
+
+
     @if (!string.IsNullOrEmpty(ViewData["Search"] as string))
     {
-        <p class="text-muted">
-            Results for "<strong>@ViewData["Search"]</strong>"
-        </p>
+        <div class="mb-4">
+            <span class="text-muted">Showing results for:</span>
+            <span class="fw-bold text-dark">"@ViewData["Search"]"</span>
+            <a asp-action="Index" class="ms-2 text-decoration-none small">Clear Filter</a>
+        </div>
     }
-    <hr />
+
     @if (!Model.Any())
     {
-        <div class="alert alert-warning">
-            No courses found.
+        <div class="empty-state">
+            <div class="empty-icon">🔍</div>
+            <h3>No courses found</h3>
+            <p>Try adjusting your search terms or check back later for new content.</p>
+            @if (!string.IsNullOrEmpty(ViewData["Search"] as string))
+            {
+                <a asp-action="Index" class="btn btn-outline-primary mt-3">View All Courses</a>
+            }
         </div>
     }
     else
     {
-        <div class="row">
+        <div class="row g-4">
             @foreach (var course in Model)
             {
-                <div class="col-md-4 mb-3">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title text-primary">@course.CourseName</h5>
-                            <p class="card-text text-muted">
-                                @(course.Description.Length > 100 ? course.Description.Substring(0, 100) + "..." : course.Description)
-                            </p>
+                bool isEnrolled = enrolledIds.Contains(course.CourseId);
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="course-card">
+                        <div class="card-img-placeholder">
+                            <i class="bi bi-book"></i>
                         </div>
-                        <div class="card-footer bg-white border-top-0 text-end">
-                            @* Always show the View/Details button *@
+
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="course-title">@course.CourseName</h5>
+                                @if (isEnrolled)
+                                {
+                                    <span class="badge-enrolled">Enrolled</span>
+                                }
+                        </div>
+
+                        <p class="course-desc">
+                            @(course.Description.Length > 100
+                                                    ? course.Description.Substring(0, 100) + "..."
+                                                    : course.Description)
+                    </p>
+                </div>
+
+                        <div class="card-footer">
                             <a asp-controller="Courses"
                                asp-action="Details"
                                asp-route-id="@course.CourseId"
                                asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString"
-                               class="btn btn-sm btn-outline-primary">
-                                Details
+                               class="btn-details">
+                                View Details
                             </a>
 
-                            @if (enrolledIds.Contains(course.CourseId))
+                    @if (isEnrolled)
                             {
-                                @* If enrolled: Show Start/Continue button *@
                                 <a asp-controller="Student"
                                    asp-action="Learn"
                                    asp-route-id="@course.CourseId"
-                                   class="btn btn-sm btn-primary">
+                                   class="btn-action btn-continue">
                                     <i class="bi bi-play-fill"></i> Continue
                                 </a>
                             }
                             else
                             {
-                                @* If NOT enrolled: Show Enroll form *@
                                 <form asp-controller="Enrollments" asp-action="Enroll" method="post" class="d-inline">
                                     <input type="hidden" name="courseId" value="@course.CourseId" />
-                                    <button type="submit" class="btn btn-sm btn-success">
+                                    <button type="submit" class="btn-action btn-enroll">
                                         Enroll Now
                                     </button>
                                 </form>

@@ -5,14 +5,161 @@
     ViewData["Title"] = "Welcome Back";
 }
 
-<div class="d-flex justify-content-center align-items-center mt-4">
-    <div class="card shadow-lg p-4" style="width: 450px; border-radius: 1rem;">
+<style>
+    .login-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+        background: #f8f9fa;
+    }
 
-        <h2 class="text-center text-primary mb-2">@ViewData["Title"]</h2>
-        <p class="text-center text-muted mb-4">Please enter your details to sign in</p>
+    .login-card {
+        width: 100%;
+        max-width: 450px;
+        background: white;
+        border-radius: 8px;
+        padding: 2.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid #e5e7eb;
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .login-icon {
+        font-size: 3rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .login-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #667eea;
+        margin-bottom: 0.5rem;
+    }
+
+    .login-subtitle {
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .form-floating > .form-control {
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+    }
+
+        .form-floating > .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+            .form-floating > .form-control:focus ~ label {
+                color: #667eea;
+            }
+
+    .form-check-input:checked {
+        background-color: #667eea;
+        border-color: #667eea;
+    }
+
+    .form-check-input:focus {
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .btn-login {
+        background: #667eea;
+        border: none;
+        border-radius: 6px;
+        padding: 0.75rem;
+        font-weight: 500;
+        color: white;
+    }
+
+        .btn-login:hover {
+            background: #5568d3;
+            color: white;
+        }
+
+    .login-links {
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+
+        .login-links a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+            .login-links a:hover {
+                text-decoration: underline;
+            }
+
+    .divider {
+        position: relative;
+        text-align: center;
+        margin: 1.5rem 0;
+    }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        .divider span {
+            position: relative;
+            background: white;
+            padding: 0 1rem;
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+    .btn-external {
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        padding: 0.75rem;
+        color: #4b5563;
+        background: white;
+    }
+
+        .btn-external:hover {
+            border-color: #667eea;
+            color: #667eea;
+            background: #f8f9ff;
+        }
+
+    .alert-danger {
+        border-radius: 6px;
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 0.75rem;
+        border: 1px solid #fecaca;
+    }
+
+    .text-danger {
+        color: #dc2626;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="login-icon">🔐</div>
+            <h1 class="login-title">@ViewData["Title"]</h1>
+            <p class="login-subtitle">Please enter your details to sign in</p>
+        </div>
 
         <form id="account" method="post">
-
             <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
             <!-- Email -->
@@ -34,27 +181,26 @@
             <!-- Remember Me -->
             <div class="form-check mb-4">
                 <input class="form-check-input" asp-for="Input.RememberMe" />
-                <label class="form-check-label text-muted" asp-for="Input.RememberMe">
+                <label class="form-check-label" asp-for="Input.RememberMe">
                     @Html.DisplayNameFor(m => m.Input.RememberMe)
                 </label>
             </div>
 
             <!-- Submit -->
-            <button id="login-submit" type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+            <button id="login-submit" type="submit" class="btn btn-login btn-lg w-100 mb-3">
                 Log in
             </button>
 
             <!-- Links -->
-            <div class="text-center">
-                <p class="mb-1">
+            <div class="login-links">
+                <p class="mb-2">
                     <a id="forgot-password" asp-page="./ForgotPassword" class="text-muted text-decoration-none">
                         Forgot the password?
                     </a>
                 </p>
                 <p class="mb-0">
                     Don't have an account?
-                    <a asp-page="./ChooseRole" asp-route-returnUrl="@Model.ReturnUrl"
-                       class="fw-bold text-primary text-decoration-none">
+                    <a asp-page="./ChooseRole" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none">
                         Register here
                     </a>
                 </p>
@@ -64,11 +210,8 @@
         <!-- Divider -->
         @if ((Model.ExternalLogins?.Count ?? 0) > 0)
         {
-            <div class="text-center my-4 position-relative">
-                <hr class="text-muted" />
-                <span class="position-absolute top-50 start-50 translate-middle bg-white px-2 text-muted small">
-                    OR
-                </span>
+            <div class="divider">
+                <span>OR</span>
             </div>
 
             <!-- External Logins -->
@@ -77,7 +220,7 @@
                 @foreach (var provider in Model.ExternalLogins!)
                 {
                     <button type="submit"
-                            class="btn btn-outline-primary w-100 mb-2"
+                            class="btn btn-external w-100 mb-2"
                             name="provider" value="@provider.Name">
                         Continue with @provider.DisplayName
                     </button>

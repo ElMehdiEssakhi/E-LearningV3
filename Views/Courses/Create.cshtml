@@ -1,39 +1,152 @@
 ﻿@model E_LearningV3.Models.Course
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Course";
 }
 
-<h1>Create</h1>
+<style>
+    /* Consistent Admin Panel Styling */
+    .page-header {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid #e5e7eb;
+    }
 
-<h4>Course</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="CourseName" class="control-label"></label>
-                <input asp-for="CourseName" class="form-control" />
-                <span asp-validation-for="CourseName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control"></textarea>
-                <!--<input asp-for="Description" class="form-control" />-->
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+    .page-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #667eea;
+        margin: 0;
+    }
+
+    .form-card {
+        background: white;
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid #e5e7eb;
+        max-width: 700px;
+        margin-bottom: 2rem;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #4b5563;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        padding: 0.75rem;
+        font-size: 0.95rem;
+        width: 100%;
+    }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            outline: none;
+        }
+
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .text-danger {
+        color: #dc2626;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+
+    .alert-danger {
+        border-radius: 6px;
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 0.75rem;
+        border: 1px solid #fecaca;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-save {
+        background: #667eea;
+        border: none;
+        border-radius: 6px;
+        padding: 0.75rem 1.5rem;
+        color: white;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+        .btn-save:hover {
+            background: #5568d3;
+            color: white;
+        }
+
+    .btn-cancel {
+        background: white;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        padding: 0.75rem 1.5rem;
+        color: #4b5563;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+        .btn-cancel:hover {
+            background: #f8f9fa;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+</style>
+
+<div class="page-header">
+    <h1 class="page-title">Create New Course</h1>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="form-card">
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+        <div class="form-group">
+            <label asp-for="CourseName" class="form-label">Course Name</label>
+            <input asp-for="CourseName" class="form-control" placeholder="Enter course name (e.g. Introduction to C#)" />
+            <span asp-validation-for="CourseName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description" class="form-label">Description</label>
+            <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter a detailed description of the course..."></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-actions">
+            <input type="submit" value="Create Course" class="btn-save" />
+            <a asp-action="Index" class="btn-cancel">Cancel</a>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

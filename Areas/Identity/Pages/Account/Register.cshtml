@@ -4,20 +4,173 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="d-flex justify-content-center align-items-center mt-4">
-    <div class="card shadow-lg p-4" style="width: 450px; border-radius: 1rem;">
-        <h2 class="text-center mb-3 text-primary">Create a new account</h2>
-        <p class="text-center text-muted mb-4">Join our learning platform today</p>
+<style>
+    .register-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+        background: #f8f9fa;
+    }
+
+    .register-card {
+        width: 100%;
+        max-width: 500px;
+        background: white;
+        border-radius: 8px;
+        padding: 2.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid #e5e7eb;
+    }
+
+    .register-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .register-icon {
+        font-size: 3rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .register-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #667eea;
+        margin-bottom: 0.5rem;
+    }
+
+    .register-subtitle {
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    .form-floating > .form-control {
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+    }
+
+        .form-floating > .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+            .form-floating > .form-control:focus ~ label {
+                color: #667eea;
+            }
+
+    .btn-register {
+        background: #667eea;
+        border: none;
+        border-radius: 6px;
+        padding: 0.75rem;
+        font-weight: 500;
+        color: white;
+    }
+
+        .btn-register:hover {
+            background: #5568d3;
+            color: white;
+        }
+
+    .register-links {
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+
+        .register-links a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+            .register-links a:hover {
+                text-decoration: underline;
+            }
+
+    .divider {
+        position: relative;
+        text-align: center;
+        margin: 1.5rem 0;
+    }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        .divider span {
+            position: relative;
+            background: white;
+            padding: 0 1rem;
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+    .btn-external {
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        padding: 0.75rem;
+        color: #4b5563;
+        background: white;
+    }
+
+        .btn-external:hover {
+            border-color: #667eea;
+            color: #667eea;
+            background: #f8f9ff;
+        }
+
+    .alert-danger {
+        border-radius: 6px;
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 0.75rem;
+        border: 1px solid #fecaca;
+    }
+
+    .text-danger {
+        color: #dc2626;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .external-section {
+        text-align: center;
+    }
+
+        .external-section h5 {
+            color: #4b5563;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+</style>
+
+<div class="register-container">
+    <div class="register-card">
+        <div class="register-header">
+            <div class="register-icon">✍️</div>
+            <h1 class="register-title">Create a new account</h1>
+            <p class="register-subtitle">Join our learning platform today</p>
+        </div>
 
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-            <!--firstname-->
+
+            <!-- First Name -->
             <div class="form-floating mb-3">
                 <input asp-for="Input.FirstName" class="form-control" placeholder="First Name" aria-required="true" />
                 <label asp-for="Input.FirstName"></label>
                 <span asp-validation-for="Input.FirstName" class="text-danger small"></span>
             </div>
-            <!--lastname-->
+
+            <!-- Last Name -->
             <div class="form-floating mb-3">
                 <input asp-for="Input.LastName" class="form-control" placeholder="Last Name" aria-required="true" />
                 <label asp-for="Input.LastName"></label>
@@ -31,8 +184,8 @@
                 <label asp-for="Input.Email"></label>
                 <span asp-validation-for="Input.Email" class="text-danger small"></span>
             </div>
-             
-            <!--role--> 
+
+            <!-- Role -->
             <input type="hidden" asp-for="Role" />
 
             <!-- Password -->
@@ -52,14 +205,15 @@
             </div>
 
             <!-- Submit -->
-            <button id="registerSubmit" type="submit" class="btn btn-primary btn-lg w-100">
+            <button id="registerSubmit" type="submit" class="btn btn-register btn-lg w-100">
                 Register
             </button>
-            <div class="text-center">
+
+            <!-- Links -->
+            <div class="register-links">
                 <p class="mb-0">
                     Already have an account?
-                    <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl"
-                       class="fw-bold text-primary text-decoration-none">
+                    <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none">
                         Login here
                     </a>
                 </p>
@@ -67,13 +221,13 @@
         </form>
 
         <!-- Divider -->
-        <div class="text-center my-3">
-            <span class="text-muted">────────  or  ────────</span>
+        <div class="divider">
+            <span>OR</span>
         </div>
 
         <!-- External logins -->
-        <section class="text-center">
-            <h5 class="mb-3">Use another service</h5>
+        <section class="external-section">
+            <h5>Use another service</h5>
 
             @if ((Model.ExternalLogins?.Count ?? 0) == 0)
             {
@@ -86,11 +240,10 @@
             }
             else
             {
-                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl"
-                      method="post">
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                     @foreach (var provider in Model.ExternalLogins!)
                     {
-                        <button type="submit" class="btn btn-outline-primary w-100 mb-2"
+                        <button type="submit" class="btn btn-external w-100 mb-2"
                                 name="provider" value="@provider.Name">
                             Continue with @provider.DisplayName
                         </button>

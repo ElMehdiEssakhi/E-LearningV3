@@ -4,19 +4,235 @@
     ViewData["Title"] = "Choose Role";
 }
 
-<div class="text-center">
-    <h2>@ViewData["Title"]</h2>
-    <p class="lead">Select your role to continue registration:</p>
+<style>
+    .role-selection-section {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 0;
+    }
 
-    <a asp-page="./Register"
-       asp-route-role="Prof"
-       class="btn btn-primary btn-lg mx-2">
-        Become a Prof
-    </a>
+    .role-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
 
-    <a asp-page="./Register"
-       asp-route-role="Student"
-       class="btn btn-secondary btn-lg mx-2">
-        Become a Student
-    </a>
+    .role-title {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+    }
+
+    .role-subtitle {
+        font-size: 1.25rem;
+        color: #6b7280;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .role-cards-container {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .role-card {
+        flex: 1;
+        min-width: 300px;
+        max-width: 400px;
+        background: white;
+        border-radius: 20px;
+        padding: 3rem 2rem;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .role-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .role-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .role-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+    .role-card-prof {
+        background: linear-gradient(135deg, #fff 0%, #f8f9ff 100%);
+    }
+
+        .role-card-prof:hover {
+            background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+        }
+
+    .role-card-student {
+        background: linear-gradient(135deg, #fff 0%, #f0f9ff 100%);
+    }
+
+        .role-card-student:hover {
+            background: linear-gradient(135deg, #f0f9ff 0%, #fff 100%);
+        }
+
+    .role-icon {
+        font-size: 5rem;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+        transition: all 0.3s ease;
+        filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));
+    }
+
+    .role-card:hover .role-icon {
+        transform: scale(1.15) rotate(5deg);
+        filter: drop-shadow(0 10px 25px rgba(102, 126, 234, 0.4));
+    }
+
+    .role-card-prof .role-icon {
+        color: #667eea;
+    }
+
+    .role-card-student .role-icon {
+        color: #4299e1;
+    }
+
+    .role-name {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 1rem;
+    }
+
+    .role-description {
+        color: #6b7280;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+    }
+
+    .role-button {
+        display: inline-block;
+        padding: 0.875rem 2.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .role-button-prof {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+        .role-button-prof:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+            color: white;
+        }
+
+    .role-button-student {
+        background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(66, 153, 225, 0.4);
+    }
+
+        .role-button-student:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 153, 225, 0.5);
+            color: white;
+        }
+
+    .role-features {
+        list-style: none;
+        padding: 0;
+        margin: 1.5rem 0;
+        text-align: left;
+    }
+
+        .role-features li {
+            padding: 0.5rem 0;
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+
+            .role-features li::before {
+                content: '✓';
+                color: #48bb78;
+                font-weight: bold;
+                margin-right: 0.75rem;
+                font-size: 1.2rem;
+            }
+
+</style>
+
+<div class="role-selection-section">
+    <div class="container">
+        <div class="role-header">
+            <h1 class="role-title">Choose Your Role</h1>
+            <p class="role-subtitle">Select the role that best describes you to continue with your registration</p>
+        </div>
+
+        <div class="role-cards-container">
+            <a asp-page="./Register"
+               asp-route-role="Prof"
+               class="role-card role-card-prof">
+                <div class="role-icon">👨‍🏫</div>
+                <h2 class="role-name">Instructor</h2>
+                <p class="role-description">
+                    Share your expertise and teach others. Create courses, manage students, and build your teaching career.
+                </p>
+                <ul class="role-features">
+                    <li>Create and manage courses</li>
+                    <li>Track student progress</li>
+                    <li>Earn from your expertise</li>
+                </ul>
+                <span class="role-button role-button-prof">Become an Instructor</span>
+            </a>
+
+            <a asp-page="./Register"
+               asp-route-role="Student"
+               class="role-card role-card-student">
+                <div class="role-icon">🎓</div>
+                <h2 class="role-name">Student</h2>
+                <p class="role-description">
+                    Start your learning journey. Access courses, learn from experts, and earn certificates.
+                </p>
+                <ul class="role-features">
+                    <li>Access all courses</li>
+                    <li>Learn at your own pace</li>
+                    <li>Earn certificates</li>
+                </ul>
+                <span class="role-button role-button-student">Become a Student</span>
+            </a>
+        </div>
+    </div>
 </div>

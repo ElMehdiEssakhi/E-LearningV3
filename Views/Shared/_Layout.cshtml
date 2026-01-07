@@ -18,24 +18,91 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
-        body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        html, body {
+            height: auto;
+            overflow-x: hidden;
         }
 
-        .nav-link:hover, .text-decoration-none:hover {
-            color: #fff !important;
-            text-decoration: underline;
-            transition: all 0.2s ease-in-out;
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-bottom: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            color: white !important;
+            font-weight: 600;
+        }
+
+            .navbar-brand:hover {
+                color: #f8f9fa !important;
+            }
+
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 6px;
+            margin: 0 0.25rem;
+        }
+
+            .nav-link:hover {
+                background: rgba(255,255,255,0.1);
+                color: white !important;
+                text-decoration: none;
+            }
+
+            .nav-link.active {
+                background: rgba(255,255,255,0.2);
+                color: white !important;
+            }
+
+        .navbar-toggler {
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        .footer {
+            background: #2d3748;
+            color: rgba(255,255,255,0.8);
+            border-top: 1px solid #4a5568;
+        }
+
+            .footer a {
+                color: rgba(255,255,255,0.7);
+                text-decoration: none;
+            }
+
+                .footer a:hover {
+                    color: #667eea;
+                }
+
+            .footer strong {
+                color: white;
+            }
+
+        .main-content {
+            flex: 1;
         }
     </style>
 </head>
-<body class="d-flex flex-column min-vh-100 bg-light">
+<body class="d-flex flex-column min-vh-100">
 
     <!-- Header / Navbar -->
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
             <div class="container">
-                <a class="navbar-brand fw-bold text-uppercase" asp-area="" asp-controller="Home" asp-action="Index">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     🎓 E_Learning
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -50,7 +117,7 @@
                                asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @((ViewData["Title"] as String )== "Privacy" ? "active" : "")"
+                            <a class="nav-link @((ViewData["Title"] as String) == "Privacy" ? "active" : "")"
                                asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
@@ -63,21 +130,21 @@
     </header>
 
     <!-- Main Content -->
-    <div class="container flex-grow-1">
+    <div class="container flex-grow-1 main-content">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white-50 mt-auto py-4">
+    <footer class="footer mt-auto py-4">
         <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
             <div>
                 <small>&copy; 2025 <strong>E_Learning</strong> - All Rights Reserved</small>
             </div>
             <div class="mt-2 mt-md-0">
-                <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-white-50 text-decoration-none me-3">Privacy Policy</a>
-                <a href="#" class="text-white-50 text-decoration-none">Terms of Service</a>
+                <a asp-area="" asp-controller="Home" asp-action="Privacy" class="me-3">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
             </div>
         </div>
     </footer>
